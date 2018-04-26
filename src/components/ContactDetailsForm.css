@@ -1,0 +1,6 @@
+
+.component-ContactDetailsForm .submit-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}

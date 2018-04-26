@@ -1,0 +1,13 @@
+
+.component-ContactDetailsFields .contact-row {
+    display: flex;
+}
+
+.component-ContactDetailsFields .contact-row > div:last-child {
+    flex: 1;
+}
+
+.component-ContactDetailsFields .contact-row > div:first-child {
+    width: 35%;
+    margin-right: 15px;
+}
