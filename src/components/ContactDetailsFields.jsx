@@ -12,6 +12,7 @@ import {
     Button, Tooltip, IconButton, Collapse
 } from "material-ui";
 import DeleteIcon from '@material-ui/icons/Delete';
+import moment from "moment";
 
 /*
 interface IContactDetails {
@@ -48,17 +49,17 @@ const contactDetailsLabelMap = {
     twitter: 'Twitter handle'
 };
 
-// stateless form
 class ContactDetailsFields extends PureComponent {
     constructor(props) {
         super(props);
 
         this.handleGuardianConsentChange = this.handleGuardianConsentChange.bind(this);
         this.handleNewContactMethod = this.handleNewContactMethod.bind(this);
+        this.handleFormatDate = this.handleFormatDate.bind(this);
     }
 
     updateContactDetails(targetProp, newValue) {
-        const newContactDetails = {...this.props.contactDetails};
+        const newContactDetails = { ...this.props.contactDetails };
         newContactDetails[targetProp] = newValue;
 
         this.props.onChange(newContactDetails);
@@ -66,7 +67,7 @@ class ContactDetailsFields extends PureComponent {
 
     updateGuardianDetails(targetProp, newValue) {
         // calling this assumes the guardian obj is set
-        const newGuardianDetails = this.props.contactDetails.guardian;
+        const newGuardianDetails = { ...this.props.contactDetails.guardian };
         newGuardianDetails[targetProp] = newValue;
 
         this.updateContactDetails('guardian', newGuardianDetails);
@@ -123,6 +124,15 @@ class ContactDetailsFields extends PureComponent {
         this.updateContactDetails('contactMethods', contactMethods);
     }
 
+    handleFormatDate() {
+        // clean up the DOB for the user
+        const parsedDate = moment(this.props.contactDetails.dateOfBirth);
+        if (parsedDate.isValid()) {
+            const strDate = parsedDate.format('L');
+            this.updateContactDetails('dateOfBirth', strDate);
+        }
+    }
+
     render() {
         return (
             <div className="component-ContactDetailsFields">
@@ -143,6 +153,7 @@ class ContactDetailsFields extends PureComponent {
                     label="Date of birth"
                     value={this.props.contactDetails.dateOfBirth}
                     onChange={(e) => this.updateContactDetails('dateOfBirth', e.target.value)}
+                    onBlur={this.handleFormatDate}
                     error={this.props.validationErrors.dateOfBirth}
                     helperText={this.props.validationErrors.dateOfBirth}
                 />

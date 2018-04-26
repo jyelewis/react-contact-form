@@ -8,7 +8,7 @@ import ContactDetailsForm from "./components/ContactDetailsForm";
 // eslint-disable-next-line
 const testPopulatedContactDetails = {
     name: 'Jye Lewis',
-    dateOfBirth: '1991-05-26',
+    dateOfBirth: '05/26/1991',
     gender: 'male',
     contactMethods: [
         {
@@ -44,7 +44,7 @@ class VisualTest extends Component {
         super(props);
 
         this.state = {
-            contactDetails: testPopulatedContactDetails,
+            contactDetails: testEmptyContactDetails,
             hasSubmitted: false
         };
 

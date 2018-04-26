@@ -4,6 +4,7 @@ import './ContactDetailsForm.css';
 import ContactDetailsFields from "./ContactDetailsFields";
 import {Button} from "material-ui";
 import {isValidFullName} from '../util/isValidFullName';
+import moment from "moment/moment";
 
 /*
 interface IProps {
@@ -20,7 +21,6 @@ interface IState {
         guardianContactNumber: string | null
     }
 }
-
 */
 
 // provides validation to ContactDetailsFields
@@ -37,7 +37,45 @@ class ContactDetailsForm extends PureComponent {
             }
         };
 
+        this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleChange(contactDetails) {
+        // reset any validation errors on fields that have been changed
+        const oldContactDetails = this.props.contactDetails;
+        const validationErrors = { ...this.state.validationErrors };
+
+        if (contactDetails.name !== oldContactDetails.name) {
+            validationErrors.name = null;
+        }
+
+        if (contactDetails.dateOfBirth !== oldContactDetails.dateOfBirth) {
+            validationErrors.dateOfBirth = null;
+        }
+
+        if (contactDetails.guardian !== oldContactDetails.guardian) {
+            if (
+                contactDetails.guardian === null ||
+                oldContactDetails.guardian === null
+            ) {
+                // user just toggled require guardian consent, remove all validation errors
+                validationErrors.guardianName = null;
+                validationErrors.guardianContactNumber = null;
+            } else {
+                if (contactDetails.guardian.name !== oldContactDetails.guardian.name) {
+                    validationErrors.guardianName = null;
+                }
+
+                if (contactDetails.guardian.contactNumber !== oldContactDetails.guardian.contactNumber) {
+                    validationErrors.guardianContactNumber = null;
+                }
+            }
+        }
+
+        this.setState({ validationErrors });
+
+        this.props.onChange(contactDetails);
     }
 
     handleSubmit() {
@@ -66,6 +104,17 @@ class ContactDetailsForm extends PureComponent {
         }
 
         // validate DOB
+        const parsedDOB = moment(this.props.contactDetails.dateOfBirth);
+        if (parsedDOB.isValid()) {
+            const ageInYears = moment().diff(parsedDOB, 'years', false);
+            if (ageInYears < 18) {
+                hasValidationError = true;
+                validationErrors.dateOfBirth = 'You must be at least 18 years old';
+            }
+        } else {
+            hasValidationError = true;
+            validationErrors.dateOfBirth = 'Please enter a valid date in the form mm/dd/yyyy';
+        }
 
         // validate guardian details
         if (this.props.contactDetails.guardian) {
@@ -102,7 +151,7 @@ class ContactDetailsForm extends PureComponent {
                 <ContactDetailsFields
                     contactDetails={this.props.contactDetails}
                     validationErrors={this.state.validationErrors}
-                    onChange={this.props.onChange}
+                    onChange={this.handleChange}
                 />
 
                 <div className="submit-buttons">
