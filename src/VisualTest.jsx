@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './VisualTest.css';
 
-import {Paper, Typography} from "material-ui";
+import {Button, Paper, Typography} from "material-ui";
 
 import ContactDetailsForm from "./components/ContactDetailsForm";
 
@@ -44,14 +44,28 @@ class VisualTest extends Component {
         super(props);
 
         this.state = {
-            contactDetails: testPopulatedContactDetails
-        }
+            contactDetails: testPopulatedContactDetails,
+            hasSubmitted: false
+        };
 
         this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleSubmitAgain = this.handleSubmitAgain.bind(this);
     }
 
     handleChange(contactDetails) {
         this.setState({ contactDetails });
+    }
+
+    handleSubmit() {
+        this.setState({ hasSubmitted: true });
+    }
+
+    handleSubmitAgain() {
+        this.setState({
+            contactDetails: testEmptyContactDetails,
+            hasSubmitted: false
+        });
     }
 
     render() {
@@ -62,10 +76,23 @@ class VisualTest extends Component {
                         Contact details
                     </Typography>
 
-                    <ContactDetailsForm
-                        contactDetails={this.state.contactDetails}
-                        onChange={this.handleChange}
-                    />
+                    {
+                        !this.state.hasSubmitted &&
+                        <ContactDetailsForm
+                            contactDetails={this.state.contactDetails}
+                            onChange={this.handleChange}
+                            onSubmit={this.handleSubmit}
+                        />
+                    }
+
+                    {
+                        this.state.hasSubmitted &&
+                        <React.Fragment>
+                            <p>Thankyou for your submission</p>
+                            <Button onClick={this.handleSubmitAgain}>Submit again</Button>
+                        </React.Fragment>
+                    }
+
                 </Paper>
 
                 <Paper className="visual-test-paper">

@@ -31,6 +31,12 @@ interface IContactDetails {
 interface IProps {
     contactDetails: IContactDetails;
     onChange: (newDetails: IContactDetails) => void;
+    validationErrors: {
+        name: string | null,
+        dateOfBirth: string | null,
+        guardianName: string | null,
+        guardianContactNumber: string | null
+    }
 }
 */
 
@@ -127,6 +133,8 @@ class ContactDetailsFields extends PureComponent {
                     label="Name"
                     value={this.props.contactDetails.name}
                     onChange={(e) => this.updateContactDetails('name', e.target.value)}
+                    error={this.props.validationErrors.name}
+                    helperText={this.props.validationErrors.name}
                 />
 
                 <TextField
@@ -135,6 +143,8 @@ class ContactDetailsFields extends PureComponent {
                     label="Date of birth"
                     value={this.props.contactDetails.dateOfBirth}
                     onChange={(e) => this.updateContactDetails('dateOfBirth', e.target.value)}
+                    error={this.props.validationErrors.dateOfBirth}
+                    helperText={this.props.validationErrors.dateOfBirth}
                 />
 
                 <FormControl fullWidth margin="normal">
@@ -213,6 +223,8 @@ class ContactDetailsFields extends PureComponent {
                         label="Guardian name"
                         value={this.props.contactDetails.guardian && this.props.contactDetails.guardian.name}
                         onChange={(e) => this.updateGuardianDetails('name', e.target.value)}
+                        error={this.props.validationErrors.guardianName}
+                        helperText={this.props.validationErrors.guardianName}
                     />
 
                     <TextField
@@ -221,6 +233,8 @@ class ContactDetailsFields extends PureComponent {
                         label="Guardian contact number"
                         value={this.props.contactDetails.guardian && this.props.contactDetails.guardian.contactNumber}
                         onChange={(e) => this.updateGuardianDetails('contactNumber', e.target.value)}
+                        error={this.props.validationErrors.guardianContactNumber}
+                        helperText={this.props.validationErrors.guardianContactNumber}
                     />
                 </Collapse>
             </div>
