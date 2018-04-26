@@ -1,4 +1,12 @@
 
 .component-VisualTest {
+    display: flex;
+    justify-content: space-around;
+    margin: 40px;
+}
 
+.visual-test-paper {
+    width: calc(50% - 40px);
+    margin: 0 20px;
+    padding: 20px;
 }
